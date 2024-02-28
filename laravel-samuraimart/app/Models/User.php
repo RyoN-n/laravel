@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notification\CustomVerifyEmail;
 use App\Notification\CustomResetPassword;
+use Overtrue\LaravelFavorite\Traits\Favoriter;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Favoriter;
 
     public function sendEmailVerificationNotification() {
         $this->notify(new CustomVerifyEmail());
@@ -50,4 +51,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function reviews() {
+        return $this->hasMany(Review::class);
+    }
 }
