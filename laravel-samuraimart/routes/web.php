@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +21,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('reviews', [ReviewController::class, 'store'])->name('reviews.store');
+// Route::post('reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
-Route::get('products/{product}/favorite', [ProductController::class, 'favorite'])->name('products.favorite');
-
-Route::resource('products', ProductController::class)->middleware(['auth', 'verified']);
+// Route::resource('products', ProductController::class)->middleware(['auth', 'verified']);
 
 Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('products', ProductController::class);
+
+    Route::post('reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+    Route::post('favorites/{product_id}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('favorites/{product_id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+});
