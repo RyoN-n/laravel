@@ -8,7 +8,7 @@ use Overtrue\LaravelFavorite\Traits\Favoriteable;
 
 class Product extends Model
 {
-    use HasFactory, Favoriteable;
+    use HasFactory;
 
     public function category() {
         return $this->belongsTo(Category::class);
@@ -16,5 +16,9 @@ class Product extends Model
 
     public function reviews() {
         return $this->hasMany(Review::class);
+    }
+
+    public function favorited_users() {
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 }
